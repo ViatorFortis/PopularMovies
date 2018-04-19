@@ -17,8 +17,6 @@
 
     <string name="sort_type_pref_key">sort_type</string>
 
-    <string name="size_end_point">w185</string>
-
     <string name="size_w200_end_point">w200</string>
 
     <string name="movie_parcel_key">MovieParcel</string>
