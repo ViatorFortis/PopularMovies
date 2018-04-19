@@ -53,26 +53,9 @@ public class NetworkUtils {
     }
 
     public static Uri buildMoviePosterURL(String sizeEndPoint, String posterPath) {
-        Uri uri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
+        return Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
                 .appendEncodedPath(sizeEndPoint + posterPath)
                 .build();
-
-        return uri;
-
-        /*Uri uri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
-                .appendPath(sizeEndPoint)
-                .appendPath(posterPath)
-                .build();
-
-        URL url = null;
-
-        try {
-            url = new URL(uri.toString() );
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        return url;*/
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
