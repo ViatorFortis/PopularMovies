@@ -9,9 +9,13 @@
 
     <string name="thumbnail_content_description">Movie poster thumbnail</string>
 
+    <string name="movies_popularity_sorting">sort_by_popularity</string>
+
     <string name="movies_rating_sorting">sort_by_rating</string>
 
-    <string name="movies_popularity_sorting">sort_by_popularity</string>
+    <string name="movies_popularity_sorting_app_title_suffix">" (most popular)"</string>
+
+    <string name="movies_rating_sorting_app_title_suffix">" (top rated)"</string>
 
     <string name="movies_list_not_loaded_toast">Movies list hasn\'t been loaded</string>
 

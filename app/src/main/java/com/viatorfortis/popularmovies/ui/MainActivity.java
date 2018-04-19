@@ -118,9 +118,11 @@ public class MainActivity
 
         if(mSortingPreference.equals(getString(R.string.movies_popularity_sorting) ) ) {
             menu.findItem(R.id.action_sort_by_popular).setChecked(true);
+            setTitle(getString(R.string.app_name) + getString(R.string.movies_popularity_sorting_app_title_suffix) );
         } else{
             if(mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
                 menu.findItem(R.id.action_sort_by_top_rated).setChecked(true);
+                setTitle(getString(R.string.app_name) + getString(R.string.movies_rating_sorting_app_title_suffix) );
             }
         }
 
@@ -136,10 +138,12 @@ public class MainActivity
         switch (item.getItemId() ) {
             case R.id.action_sort_by_popular:
                 newSortPref = getString(R.string.movies_popularity_sorting);
+                setTitle(getString(R.string.app_name) + getString(R.string.movies_popularity_sorting_app_title_suffix) );
                 break;
 
             case R.id.action_sort_by_top_rated:
                 newSortPref = getString(R.string.movies_rating_sorting);
+                setTitle(getString(R.string.app_name) + getString(R.string.movies_rating_sorting_app_title_suffix) );
                 break;
 
             default:
