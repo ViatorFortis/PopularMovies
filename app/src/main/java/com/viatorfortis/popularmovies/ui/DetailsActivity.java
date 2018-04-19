@@ -50,7 +50,7 @@ public class DetailsActivity
 
         ImageView PosterImageView = findViewById(R.id.iv_details_poster);
         Picasso.with(PosterImageView.getContext() )
-                .load(NetworkUtils.buildMoviePosterURL("w300", movie.getPosterPath() ) )
+                .load(NetworkUtils.buildMoviePosterURL(getString(R.string.size_w300_end_point), movie.getPosterPath() ) )
                 .into(PosterImageView);
 
         ( (TextView) findViewById(R.id.tv_details_release_date) ).setText(movie.getReleaseDate() );
