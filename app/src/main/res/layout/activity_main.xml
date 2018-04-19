@@ -15,13 +15,7 @@
         android:background="?attr/colorPrimaryDark"
         android:theme="@style/AppTheme"
         app:popupTheme="@style/OptionsMenuTheme"
-        app:titleTextColor="@color/textColorPrimary"/>
-
-        <!--
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        -->
+        app:titleTextColor="@color/textColorPrimary" />
 
     <RelativeLayout
         android:id="@+id/rl_movies"

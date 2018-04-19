@@ -21,7 +21,6 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_details_title"
         app:layout_constraintTop_toTopOf="parent"
 
-
         app:layout_constraintVertical_chainStyle="spread_inside"
 
         app:popupTheme="@style/OptionsMenuTheme"
@@ -32,15 +31,10 @@
         android:id="@+id/tv_details_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:paddingBottom="8dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
+        android:theme="@style/BlackOnWhiteThemeAndSmallPadding"
 
         android:textAlignment="center"
         android:textSize="24sp"
-        android:theme="@style/BlackOnWhiteTheme"
         app:layout_constraintBottom_toTopOf="@+id/iv_details_poster"
         app:layout_constraintEnd_toStartOf="@+id/tv_details_release_date"
         app:layout_constraintHorizontal_bias="0.0"
@@ -68,34 +62,22 @@
         android:id="@+id/tv_details_release_date_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
+        android:theme="@style/BlackOnWhiteThemeAndSmallPadding"
 
-        android:paddingEnd="8dp"
-
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:text="@string/release_date_label"
-        android:textSize="16sp"
-
-        android:theme="@style/BlackOnWhiteTheme"
         app:layout_constraintEnd_toStartOf="@+id/tv_details_release_date"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_details_poster" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_details_poster"
+
+        android:text="@string/release_date_label"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_details_release_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:paddingBottom="8dp"
-
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:textSize="16sp"
-        android:theme="@style/BlackOnWhiteTheme"
+        android:theme="@style/BlackOnWhiteThemeAndSmallPadding"
 
         app:layout_constraintBottom_toBottomOf="@+id/tv_details_release_date_label"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,6 +86,7 @@
         app:layout_constraintStart_toEndOf="@+id/tv_details_release_date_label"
         app:layout_constraintTop_toTopOf="@+id/tv_details_release_date_label"
 
+        android:textSize="16sp"
         tools:text="2018-12-19" />
 
     <TextView
@@ -157,14 +140,10 @@
         android:id="@+id/tv_details_vote_average"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:paddingBottom="8dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
+        android:theme="@style/BlackOnWhiteThemeAndSmallPadding"
 
         android:textSize="16sp"
-        android:theme="@style/BlackOnWhiteTheme"
+
         app:layout_constraintBottom_toBottomOf="@+id/tv_details_vote_average_label"
 
         app:layout_constraintHorizontal_bias="0.5"
@@ -178,13 +157,9 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/DefaultPaddingTheme"
         android:background="@color/colorPrimaryDark"
-        android:paddingBottom="8dp"
 
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-
-        android:paddingTop="8dp"
         android:textSize="16sp"
 
         app:layout_constraintBottom_toBottomOf="parent"
