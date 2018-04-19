@@ -214,7 +214,7 @@ public class MainActivity
         if (object != null && object instanceof ArrayList) {
             mAdapter.addMoviesList((ArrayList<Movie>) object);
         } else {
-            Toast.makeText(this, getString(R.string.movies_list_not_loaded_toast), Toast.LENGTH_LONG);
+            Toast.makeText(this, getString(R.string.movies_list_not_loaded_toast), Toast.LENGTH_LONG).show();
         }
     }
 
