@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 
 public class NetworkUtils {
-    final static String MOVIES_LIST_BASE_URL =
+    private final static String MOVIES_LIST_BASE_URL =
             "https://api.themoviedb.org/3";
 
     public final static String POPULARITY_SORTING_ENDPOINT =
@@ -23,10 +23,10 @@ public class NetworkUtils {
     public final static String TOP_RATED_SORTING_ENDPOINT =
             "movie/top_rated";
 
-    final static String MOVIE_POSTER_BASE_URL =
+    private final static String MOVIE_POSTER_BASE_URL =
             "https://image.tmdb.org/t/p";
 
-    final static String API_KEY_PARAMETER = "api_key";
+    private final static String API_KEY_PARAMETER = "api_key";
 
     public static String getMovieListPageJSON(Context context, String sortingEndpoint, int nextLoadedPageNumber)
             throws IOException {
@@ -58,7 +58,7 @@ public class NetworkUtils {
                 .build();
     }
 
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
+    private static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();
