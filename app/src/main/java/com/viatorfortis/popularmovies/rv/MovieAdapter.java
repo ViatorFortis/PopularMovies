@@ -1,4 +1,5 @@
 package com.viatorfortis.popularmovies.rv;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,19 +91,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, final int position) {
-        holder.mTextViewName.setText(mMovieList.get(position).getTitle() );
-        Picasso.with(holder.mImageViewThumbnail.getContext() )
-                .load(NetworkUtils.buildMoviePosterURL("w200", mMovieList.get(position).getPosterPath() ) )
-                .into(holder.mImageViewThumbnail);
+        Context thumbnailContext = holder.mImageViewThumbnail.getContext();
 
-        /*final String name = values.get(position);
-        holder.mTextViewName.setText(name);
-        holder.mTextViewName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                remove(position);
-            }
-        });*/
+        holder.mTextViewName.setText(mMovieList.get(position).getTitle() );
+        Picasso.with(thumbnailContext)
+                .load(NetworkUtils.buildMoviePosterURL(thumbnailContext.getString(R.string.size_w200_end_point), mMovieList.get(position).getPosterPath() ) )
+                .into(holder.mImageViewThumbnail);
     }
 
     @Override
