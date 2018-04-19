@@ -44,6 +44,8 @@ public class MainActivity
 
     private static final int GRID_THRESHOLD_ROW_COUNT = 5;
 
+    private static final int GRID_SPAN_COUNT = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,14 +73,14 @@ public class MainActivity
         // RecyclerView initialization
         RecyclerView recyclerView = findViewById(R.id.rv_movies);
 
-        mLayoutManager = new GridLayoutManager(this, 2);
+        mLayoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
         recyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new MovieAdapter(moviesList, this);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            private int thresholdItemCount = GRID_THRESHOLD_ROW_COUNT * ( (GridLayoutManager) mLayoutManager).getSpanCount();
+            private final int thresholdItemCount = GRID_THRESHOLD_ROW_COUNT * ( (GridLayoutManager) mLayoutManager).getSpanCount();
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
