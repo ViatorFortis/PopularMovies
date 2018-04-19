@@ -80,8 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         view.setTag(mMovieList);
 
-        MovieViewHolder movieViewHolder = new MovieViewHolder(view);
-        return movieViewHolder;
+        return new MovieViewHolder(view);
     }
 
 //    @Override
