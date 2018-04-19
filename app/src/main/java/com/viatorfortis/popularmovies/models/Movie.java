@@ -9,23 +9,24 @@ import com.google.gson.annotations.SerializedName;
 public class Movie
         implements Parcelable {
 
+    // for Popular movies part 2 project
     @SerializedName("id")
     private int mId;
 
     @SerializedName("title")
-    private String mTitle;
+    private final String mTitle;
 
     @SerializedName("release_date")
-    private String mReleaseDate;
+    private final String mReleaseDate;
 
     @SerializedName("poster_path")
-    private String mPosterPath;
+    private final String mPosterPath;
 
     @SerializedName("vote_average")
-    private float mVoteAverage;
+    private final float mVoteAverage;
 
     @SerializedName("overview")
-    private String mPlotSynopsis;
+    private final String mPlotSynopsis;
 
     public String getTitle() {
         return mTitle;
