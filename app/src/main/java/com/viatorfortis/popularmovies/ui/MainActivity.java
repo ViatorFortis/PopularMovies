@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
 import com.google.gson.JsonSyntaxException;
 import com.viatorfortis.popularmovies.R;
 import com.viatorfortis.popularmovies.models.Movie;
@@ -23,8 +22,6 @@ import com.viatorfortis.popularmovies.rv.MovieAdapter;
 import com.viatorfortis.popularmovies.utilities.JsonUtils;
 import com.viatorfortis.popularmovies.utilities.MoviesSharedPreferences;
 import com.viatorfortis.popularmovies.utilities.NetworkUtils;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -201,8 +198,6 @@ public class MainActivity
                     }
                 } catch (IOException e) {
                     Log.d(e.getClass().getName(), e.getMessage());
-//                } catch (JSONException e) {
-//                    Log.d(e.getClass().getName(), e.getMessage());
                 } catch (JsonSyntaxException e) {
                     Log.d(e.getClass().getName(), e.getMessage());
                 }
