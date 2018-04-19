@@ -1,6 +1,5 @@
 package com.viatorfortis.popularmovies.ui;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,12 +17,6 @@ import com.viatorfortis.popularmovies.utilities.NetworkUtils;
 
 public class DetailsActivity
         extends AppCompatActivity {
-
-//    private String mTitle;
-//    private String mReleaseDate;
-//    private String mPosterPath;
-//    private float mVoteAverage;
-//    private String mPlotSynopsis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +59,6 @@ public class DetailsActivity
 
         String ratingInBrackets = getString(R.string.rating_in_brackets, movie.getVoteAverage() );
         ( (TextView) findViewById(R.id.tv_details_vote_average) ).setText(ratingInBrackets);
-        //( (TextView) findViewById(R.id.tv_details_vote_average) ).setText("(" + String.valueOf(movie.getVoteAverage() ) + ")" );
 
         ( (TextView) findViewById(R.id.tv_details_plot_synopsis) ).setText(movie.getPlotSynopsis() );
     }
