@@ -55,10 +55,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public class MovieViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener
     {
-        public TextView mTextViewName;
-        public ImageView mImageViewThumbnail;
+        private TextView mTextViewName;
+        private ImageView mImageViewThumbnail;
 
-        public MovieViewHolder(View itemView) {
+        private MovieViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
