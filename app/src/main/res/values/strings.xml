@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Popular movies</string>
+
+    <string name="api_key"></string>
+
+    <string name="sort_by_rate_action">Rating sort</string>
+
+    <string name="sort_by_popularity_action">Popularity sort</string>
+
+    <string name="thumbnail_content_description">Movie poster thumbnail</string>
+
+    <string name="movies_rating_sorting">sort_by_rating</string>
+
+    <string name="movies_popularity_sorting">sort_by_popularity</string>
+
+    <string name="movies_list_not_loaded_toast">Movies list hasn\'t been loaded</string>
+
+    <string name="sort_type_pref_key">sort_type</string>
+
+    <string name="json_page_results_field">results</string>
+
+    <string name="size_end_point">w185</string>
+
+    <string name="movie_parcel_key">MovieParcell</string>
+
+    <string name="details_activity_caption">Popular movies: details</string>
+
+    <string name="poster_content_description">Movie poster</string>
+
+    <string name="release_date_label">Release date:</string>
+
+    <string name="vote_rating_label">Vote rating:</string>
+
+    <string name="rating_in_brackets">(%1$.1f)</string>
+
+</resources>

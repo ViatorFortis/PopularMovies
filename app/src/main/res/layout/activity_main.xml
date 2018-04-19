@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.viatorfortis.popularmovies.ui.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="4dp"
+        android:background="?attr/colorPrimaryDark"
+        android:theme="@style/AppTheme"
+        app:popupTheme="@style/OptionsMenuTheme"
+        app:titleTextColor="@color/textColorPrimary"/>
+
+        <!--
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        -->
+
+    <RelativeLayout
+        android:id="@+id/rl_movies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@+id/tb_appbar"
+        android:padding="8dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
