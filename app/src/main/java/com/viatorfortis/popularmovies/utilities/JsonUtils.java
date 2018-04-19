@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class JsonUtils {
-    public static List<Movie> parseMovieListJson(String json, Context context)
+    public static List<Movie> parseMovieListJson(String json)
             throws JsonSyntaxException {
         Gson gson = new Gson();
         MovieListPage movieListPage = gson.fromJson(json, MovieListPage.class);

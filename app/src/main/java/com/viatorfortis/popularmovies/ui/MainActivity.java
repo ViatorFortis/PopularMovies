@@ -196,7 +196,7 @@ public class MainActivity
                     String MovieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, mAdapter.getNextLoadedPageNumber() );
 
                     if (!MovieListPageJSON.isEmpty()) {
-                        return JsonUtils.parseMovieListJson(MovieListPageJSON, getContext() );
+                        return JsonUtils.parseMovieListJson(MovieListPageJSON);
                     }
                 } catch (IOException e) {
                     Log.d(e.getClass().getName(), e.getMessage());
