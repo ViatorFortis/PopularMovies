@@ -39,10 +39,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         mGridItemClickListener = gridItemClickListener;
     }
 
-    public void incrementNextLoadedPageNumber() {
-        mNextPageNumber++;
-    }
-
     public static int getNextLoadedPageNumber() {
         return mNextPageNumber;
     }

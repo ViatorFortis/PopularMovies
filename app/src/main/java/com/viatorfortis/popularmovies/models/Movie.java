@@ -27,46 +27,24 @@ public class Movie
     @SerializedName("overview")
     private String mPlotSynopsis;
 
-    public int getId() {
-        return mId;
-    }
-    public void setId(int newValue) {
-        mId = newValue;
-    }
-
     public String getTitle() {
         return mTitle;
-    }
-    public void setTitle(String newValue) {
-        mTitle = newValue;
     }
 
     public String getReleaseDate() {
         return mReleaseDate;
     }
-    public void setReleaseDate(String newValue) {
-        mReleaseDate = newValue;
-    }
 
     public String getPosterPath() {
         return mPosterPath;
-    }
-    public void setPosterURL(String newValue) {
-        mPosterPath = newValue;
     }
 
     public float getVoteAverage() {
         return mVoteAverage;
     }
-    public void setVoteAverage(float newValue) {
-        mVoteAverage = newValue;
-    }
 
     public String getPlotSynopsis() {
         return mPlotSynopsis;
-    }
-    public void setPlotSynopsis(String newValue) {
-        mPlotSynopsis = newValue;
     }
 
     public Movie(String title, String releaseDate, String posterURL, float voteAverage, String plotSynopsis) {
