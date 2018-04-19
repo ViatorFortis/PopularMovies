@@ -9,8 +9,6 @@ import com.viatorfortis.popularmovies.R;
 
 public class MoviesSharedPreferences {
 
-    public static final String PREF_SORT_TYPE = "sort_type";
-
     public static String getPreferredSortType (Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String sortTypePrefKey = context.getString(R.string.sort_type_pref_key);
