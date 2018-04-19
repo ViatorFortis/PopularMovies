@@ -20,7 +20,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
 
 
-    private List<Movie> mMovieList;
+    private final List<Movie> mMovieList;
     private static int mNextPageNumber = 1;
     private boolean mClearListBeforeAddition = false;
 
@@ -56,8 +56,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public class MovieViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener
     {
-        private TextView mTextViewName;
-        private ImageView mImageViewThumbnail;
+        private final TextView mTextViewName;
+        private final ImageView mImageViewThumbnail;
 
         private MovieViewHolder(View itemView) {
             super(itemView);
