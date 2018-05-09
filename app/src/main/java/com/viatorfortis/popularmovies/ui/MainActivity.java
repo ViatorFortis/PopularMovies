@@ -32,7 +32,6 @@ public class MainActivity
         implements LoaderManager.LoaderCallbacks,
         MovieAdapter.GridItemClickListener {
 
-    //private RecyclerView mRecyclerView;
     private MovieAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -59,16 +58,17 @@ public class MainActivity
 
         // Loader initialization
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader <List<Movie>> movieLoader = loaderManager.getLoader(MOVIE_LIST_LOADER_ID);
 
-        //loaderManager.initLoader(MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
-        if (movieLoader == null){
-            loaderManager.initLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this).forceLoad();
-        }else{
+        ArrayList<Movie> movieList;
+
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies") ) {
+            movieList = new ArrayList<>();
             loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this).forceLoad();
+        } else {
+            movieList = savedInstanceState.getParcelableArrayList("movies");
+            mIsLoading = false;
+            loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this);
         }
-
-        List<Movie> moviesList = new ArrayList<>();
 
         // RecyclerView initialization
         RecyclerView recyclerView = findViewById(R.id.rv_movies);
@@ -76,7 +76,7 @@ public class MainActivity
         mLayoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MovieAdapter(moviesList, this);
+        mAdapter = new MovieAdapter(movieList, this);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -103,6 +103,16 @@ public class MainActivity
                 }
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        try {
+            outState.putParcelableArrayList("movies", mAdapter.getMovieList());
+        } catch (Exception e) {
+            Log.d(e.getClass().getName(), e.getMessage());
+        }
     }
 
     @Override
@@ -176,14 +186,6 @@ public class MainActivity
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
-
-//                if (mData != null) {
-//                    // Use cached data
-//                    deliverResult(mData);
-//                } else {
-//                    // We have no data, so kick off loading it
-//                    forceLoad();
-//                }
             }
 
             @Override
@@ -197,10 +199,10 @@ public class MainActivity
                 }
 
                 try {
-                    String MovieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, mAdapter.getNextLoadedPageNumber() );
+                    String movieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, mAdapter.getNextLoadedPageNumber() );
 
-                    if (!MovieListPageJSON.isEmpty()) {
-                        return JsonUtils.parseMovieListJson(MovieListPageJSON);
+                    if (!movieListPageJSON.isEmpty()) {
+                        return JsonUtils.parseMovieListJson(movieListPageJSON);
                     }
                 } catch (IOException e) {
                     Log.d(e.getClass().getName(), e.getMessage());
@@ -230,8 +232,6 @@ public class MainActivity
 
     @Override
     public void onGridItemClick(int adapterPosition) {
-        //Toast.makeText(this, String.valueOf(adapterPosition), Toast.LENGTH_LONG).show();
-
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(getString(R.string.movie_parcel_key), mAdapter.getMovie(adapterPosition) );
 

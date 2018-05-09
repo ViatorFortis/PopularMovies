@@ -20,12 +20,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
 
 
-    private final List<Movie> mMovieList;
+    private final ArrayList<Movie> mMovieList;
     private static int mNextPageNumber = 1;
     private boolean mClearListBeforeAddition = false;
 
     public Movie getMovie(int adapterPosition) {
         return mMovieList.get(adapterPosition);
+    }
+
+    public ArrayList<Movie> getMovieList() {
+        return mMovieList;
     }
 
     private final GridItemClickListener mGridItemClickListener;
@@ -34,7 +38,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         void onGridItemClick(int adapterPosition);
     }
 
-    public MovieAdapter(List <Movie> moviesList, GridItemClickListener gridItemClickListener) {
+    public MovieAdapter(ArrayList <Movie> moviesList, GridItemClickListener gridItemClickListener) {
         mMovieList = moviesList;
         mGridItemClickListener = gridItemClickListener;
     }
