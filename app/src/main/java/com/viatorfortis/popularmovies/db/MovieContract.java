@@ -6,7 +6,7 @@ public final class MovieContract {
 
     private MovieContract() {}
 
-    public static final class FavouriteMovieEntry
+    public static final class FavouriteMoviesEntry
             implements BaseColumns {
         public static final String TABLE_NAME = "favouriteMovies";
 
