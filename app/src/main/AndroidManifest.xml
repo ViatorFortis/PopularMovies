@@ -28,6 +28,12 @@
                 android:value=".ui.MainActivity" />
         </activity>
 
+        <provider
+            android:authorities="com.viatorfortis.popularmovies"
+            android:name="com.viatorfortis.popularmovies.db.MovieContentProvider"
+            android:exported="false"
+            />
+
     </application>
 
 </manifest>
