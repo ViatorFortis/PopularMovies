@@ -37,4 +37,6 @@
 
     <string name="rating_in_brackets">(%1$.1f)</string>
 
+    <string name="menu_item_undefined_action_toast">Undefined action for menu item</string>
+
 </resources>

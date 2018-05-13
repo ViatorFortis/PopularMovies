@@ -32,7 +32,6 @@
             app:popupTheme="@style/OptionsMenuTheme"
             app:titleTextColor="@color/textColorPrimary" />
 
-
         <TextView
             android:id="@+id/tv_details_title"
             android:layout_width="match_parent"
