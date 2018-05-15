@@ -26,6 +26,10 @@ public class NetworkUtils {
     private final static String MOVIE_POSTER_BASE_URL =
             "https://image.tmdb.org/t/p";
 
+    private final static String REVIEWS_SEGMENT = "reviews";
+
+    private final static String PAGE_PARAMETER = "page";
+
     private final static String API_KEY_PARAMETER = "api_key";
 
     public static String getMovieListPageJSON(Context context, String sortingEndpoint, int nextLoadedPageNumber)
@@ -75,5 +79,30 @@ public class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    private static URL buildMovieReviewListURL(Context context, int movieId, int pageNumber) {
+        Uri uri = Uri.parse(MOVIES_LIST_BASE_URL).buildUpon()
+                .appendEncodedPath(String.valueOf(movieId) )
+                .appendEncodedPath(REVIEWS_SEGMENT)
+                .appendQueryParameter(API_KEY_PARAMETER, context.getString(R.string.api_key) )
+                .appendQueryParameter(PAGE_PARAMETER, String.valueOf(pageNumber) )
+                .build();
+
+        URL url = null;
+
+        try {
+            url = new URL(uri.toString() );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    public static String getMovieReviewListPageJSON(Context context, int movieId, int pageNumber)
+            throws IOException {
+        URL url = buildMovieReviewListURL(context, movieId, pageNumber);
+        return getResponseFromHttpUrl(url);
     }
 }
