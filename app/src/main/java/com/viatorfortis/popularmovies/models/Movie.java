@@ -28,6 +28,10 @@ public class Movie
     @SerializedName("overview")
     private final String mPlotSynopsis;
 
+    public int getId() {
+        return mId;
+    }
+
     public String getTitle() {
         return mTitle;
     }
