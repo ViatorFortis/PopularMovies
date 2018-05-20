@@ -52,7 +52,8 @@ public class Movie
         return mPlotSynopsis;
     }
 
-    public Movie(String title, String releaseDate, String posterURL, float voteAverage, String plotSynopsis) {
+    public Movie(int id, String title, String releaseDate, String posterURL, float voteAverage, String plotSynopsis) {
+        mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
         mPosterPath = posterURL;
@@ -62,6 +63,7 @@ public class Movie
 
 
     private Movie(Parcel in) {
+        mId = in.readInt();
         mTitle = in.readString();
         mReleaseDate = in.readString();
         mPosterPath = in.readString();
@@ -88,6 +90,7 @@ public class Movie
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
         dest.writeString(mTitle);
         dest.writeString(mReleaseDate);
         dest.writeString(mPosterPath);
