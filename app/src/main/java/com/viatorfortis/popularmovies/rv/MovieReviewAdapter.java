@@ -52,4 +52,11 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     public int getItemCount() {
         return mMovieReviewList.size();
     }
+
+    public void AddItems(ArrayList<MovieReview> movieReviewList) {
+        mNextPageNumber++;
+
+        mMovieReviewList.addAll(movieReviewList);
+        notifyDataSetChanged();
+    }
 }
