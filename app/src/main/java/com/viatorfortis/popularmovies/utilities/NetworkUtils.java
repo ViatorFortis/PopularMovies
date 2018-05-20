@@ -15,13 +15,13 @@ import java.util.Scanner;
 
 public class NetworkUtils {
     private final static String MOVIES_LIST_BASE_URL =
-            "https://api.themoviedb.org/3";
+            "https://api.themoviedb.org/3/movie";
 
     public final static String POPULARITY_SORTING_ENDPOINT =
-            "movie/popular";
+            "popular";
 
     public final static String TOP_RATED_SORTING_ENDPOINT =
-            "movie/top_rated";
+            "top_rated";
 
     private final static String MOVIE_POSTER_BASE_URL =
             "https://image.tmdb.org/t/p";

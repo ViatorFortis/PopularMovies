@@ -1,9 +1,16 @@
 package com.viatorfortis.popularmovies.ui;
 
+import android.annotation.SuppressLint;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -11,15 +18,35 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonSyntaxException;
 import com.squareup.picasso.Picasso;
 import com.viatorfortis.popularmovies.R;
 import com.viatorfortis.popularmovies.models.Movie;
+import com.viatorfortis.popularmovies.models.MovieReview;
+import com.viatorfortis.popularmovies.rv.MovieReviewAdapter;
+import com.viatorfortis.popularmovies.utilities.JsonUtils;
 import com.viatorfortis.popularmovies.utilities.NetworkUtils;
 
-public class DetailsActivity
-        extends AppCompatActivity {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+public class DetailsActivity
+        extends AppCompatActivity
+//        implements LoaderManager.LoaderCallbacks
+        {
+
+    private Movie mMovie;
     private boolean mFavouriteMovie;
+
+    private boolean mReviewLoading = true;
+
+    private int REVIEW_LIST_LOADER_ID = 14;
+
+    private LoaderManager.LoaderCallbacks<List<MovieReview>> mReviewLoaderListener;
+
+    private RecyclerView.LayoutManager mReviewLayoutManager;
+    private MovieReviewAdapter mReviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +62,6 @@ public class DetailsActivity
         setTitle(getString(R.string.details_activity_caption) );
 
         mFavouriteMovie = false;
-
         Movie movie;
 
         try {
@@ -46,7 +72,72 @@ public class DetailsActivity
             return;
         }
 
+        mMovie = movie;
         populateViews(movie);
+
+        mReviewLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieReview>>() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public Loader<List<MovieReview>> onCreateLoader(int id, Bundle args) {
+                return new AsyncTaskLoader<List<MovieReview>>(getApplicationContext() ) {
+                    @Override
+                    public List<MovieReview> loadInBackground() {
+                        try {
+                            String movieReviewListPageJSON = NetworkUtils.getMovieReviewListPageJSON(getContext(), mMovie.getId(), mReviewAdapter.getNextLoadedPageNumber() );
+
+                            if (!movieReviewListPageJSON.isEmpty()) {
+                                return JsonUtils.parseMovieReviewListJson(movieReviewListPageJSON);
+                            }
+                        } catch (IOException e) {
+                            Log.d(e.getClass().getName(), e.getMessage());
+                        } catch (JsonSyntaxException e) {
+                            Log.d(e.getClass().getName(), e.getMessage());
+                        }
+
+                        return null;
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<List<MovieReview>> loader, List<MovieReview> data) {
+                mReviewLoading = false;
+
+                if (data != null
+                        && data instanceof ArrayList) {
+                    mReviewAdapter.addItems((ArrayList<MovieReview>) data);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.movie_review_list_not_loaded_toast), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onLoaderReset(android.support.v4.content.Loader<List<MovieReview>> loader) {
+
+            }
+        };
+
+        ArrayList<MovieReview> reviewList;
+        LoaderManager loaderManager = getSupportLoaderManager();
+
+        if (savedInstanceState == null
+                || !savedInstanceState.containsKey("reviews")) {
+            reviewList = new ArrayList<>();
+            loaderManager.restartLoader(REVIEW_LIST_LOADER_ID, new Bundle(), mReviewLoaderListener).forceLoad();
+        } else {
+            reviewList = savedInstanceState.getParcelableArrayList("reviews");
+            mReviewLoading = false;
+            loaderManager.restartLoader(REVIEW_LIST_LOADER_ID, new Bundle(), mReviewLoaderListener);
+        }
+
+
+        RecyclerView reviewRecyclerView = findViewById(R.id.rv_movie_reviews);
+
+        mReviewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        reviewRecyclerView.setLayoutManager(mReviewLayoutManager);
+
+        mReviewAdapter = new MovieReviewAdapter(reviewList);
+        reviewRecyclerView.setAdapter(mReviewAdapter);
     }
 
     private void populateViews (Movie movie) {
@@ -92,4 +183,5 @@ public class DetailsActivity
         }
         return true;
     }
+
 }
