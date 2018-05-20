@@ -16,6 +16,10 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     private final ArrayList<MovieReview> mMovieReviewList;
     public static int mNextPageNumber = 1;
 
+    public static int getNextLoadedPageNumber() {
+        return mNextPageNumber;
+    }
+
     public MovieReviewAdapter(ArrayList <MovieReview> movieReviewList) {
         mMovieReviewList = movieReviewList;
     }
@@ -53,7 +57,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
         return mMovieReviewList.size();
     }
 
-    public void AddItems(ArrayList<MovieReview> movieReviewList) {
+    public void addItems(ArrayList<MovieReview> movieReviewList) {
         mNextPageNumber++;
 
         mMovieReviewList.addAll(movieReviewList);
