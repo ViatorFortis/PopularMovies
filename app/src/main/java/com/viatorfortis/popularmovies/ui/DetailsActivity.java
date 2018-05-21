@@ -138,6 +138,32 @@ public class DetailsActivity
 
         mReviewAdapter = new MovieReviewAdapter(reviewList);
         reviewRecyclerView.setAdapter(mReviewAdapter);
+
+        reviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private final int THRESHOLD_ITEM_COUNT = 3;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = mReviewLayoutManager.getItemCount();
+                int lastVisibleItemPosition = ( (LinearLayoutManager) mReviewLayoutManager).findLastVisibleItemPosition();
+
+                if (!mReviewLoading) {
+                    if ((lastVisibleItemPosition + THRESHOLD_ITEM_COUNT) >= totalItemCount) {
+                        mReviewLoading = true;
+                        loadReviewsIntoAdapter();
+
+                        Toast.makeText(getApplicationContext(), String.valueOf("onScrolled()"), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
     }
 
     private void populateViews (Movie movie) {
@@ -182,6 +208,10 @@ public class DetailsActivity
                 Toast.makeText(this, getString(R.string.menu_item_undefined_action_toast), Toast.LENGTH_LONG).show();
         }
         return true;
+    }
+
+    private void loadReviewsIntoAdapter() {
+        getSupportLoaderManager().getLoader(REVIEW_LIST_LOADER_ID).forceLoad();
     }
 
 }
