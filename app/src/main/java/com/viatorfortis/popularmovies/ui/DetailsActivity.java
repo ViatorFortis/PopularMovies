@@ -1,6 +1,8 @@
 package com.viatorfortis.popularmovies.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
@@ -11,9 +13,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +42,7 @@ import java.util.List;
 public class DetailsActivity
         extends AppCompatActivity
 //        implements LoaderManager.LoaderCallbacks
+        implements MovieReviewAdapter.ItemClickListener
         {
 
     private Movie mMovie;
@@ -47,6 +56,8 @@ public class DetailsActivity
 
     private RecyclerView.LayoutManager mReviewLayoutManager;
     private MovieReviewAdapter mReviewAdapter;
+
+    private RecyclerView mReviewRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +85,8 @@ public class DetailsActivity
 
         mMovie = movie;
         populateViews(movie);
+
+        mReviewAdapter.resetNextLoadedPageNumber();
 
         mReviewLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieReview>>() {
             @SuppressLint("StaticFieldLeak")
@@ -131,15 +144,15 @@ public class DetailsActivity
         }
 
 
-        RecyclerView reviewRecyclerView = findViewById(R.id.rv_movie_reviews);
+        mReviewRecyclerView = findViewById(R.id.rv_movie_reviews);
 
         mReviewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        reviewRecyclerView.setLayoutManager(mReviewLayoutManager);
+        mReviewRecyclerView.setLayoutManager(mReviewLayoutManager);
 
-        mReviewAdapter = new MovieReviewAdapter(reviewList);
-        reviewRecyclerView.setAdapter(mReviewAdapter);
+        mReviewAdapter = new MovieReviewAdapter(reviewList, this);
+        mReviewRecyclerView.setAdapter(mReviewAdapter);
 
-        reviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mReviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private final int THRESHOLD_ITEM_COUNT = 3;
 
             @Override
@@ -158,8 +171,6 @@ public class DetailsActivity
                     if ((lastVisibleItemPosition + THRESHOLD_ITEM_COUNT) >= totalItemCount) {
                         mReviewLoading = true;
                         loadReviewsIntoAdapter();
-
-                        Toast.makeText(getApplicationContext(), String.valueOf("onScrolled()"), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -212,6 +223,43 @@ public class DetailsActivity
 
     private void loadReviewsIntoAdapter() {
         getSupportLoaderManager().getLoader(REVIEW_LIST_LOADER_ID).forceLoad();
+    }
+
+    @Override
+    public void onItemClick(MovieReview review) {
+        Intent intent = new Intent(this, ReviewActivity.class);
+        intent.putExtra("ReviewParcel", review);
+        startActivity(intent);
+
+        /*
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View reviewLayout = inflater.inflate(R.layout.review,
+                null);
+
+        //reviewLayout.setLayoutParams();
+
+        final PopupWindow popupWindow = new PopupWindow(reviewLayout,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+
+        TextView authorTextView = reviewLayout.findViewById(R.id.review_tv_author);
+        authorTextView.setText(review.getAuthor() );
+
+        TextView contentTextView = reviewLayout.findViewById(R.id.review_tv_content);
+        contentTextView.setText(review.getContent() );
+
+        Button closeButton = reviewLayout.findViewById(R.id.review_btn_close);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+        }
+        });
+
+        //popupWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.black));
+        popupWindow.showAtLocation(mReviewRecyclerView, Gravity.CENTER, 0, 0);
+        */
     }
 
 }

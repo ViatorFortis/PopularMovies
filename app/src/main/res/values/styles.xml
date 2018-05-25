@@ -25,6 +25,10 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="BlackOnWhiteThemeWithPadding" parent="BlackOnWhiteTheme">
+        <item name="android:padding">8dp</item>
+    </style>
+
     <style name="DefaultPaddingTheme">
         <item name="android:padding">8dp</item>
     </style>
@@ -35,6 +39,10 @@
 
     <style name="ButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_sort_white_24px</item>
+    </style>
+
+    <style name="AppThemeWithPadding" parent="AppTheme">
+        <item name="android:padding">8dp</item>
     </style>
 
 </resources>

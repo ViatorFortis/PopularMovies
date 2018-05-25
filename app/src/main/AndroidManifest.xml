@@ -28,6 +28,13 @@
                 android:value=".ui.MainActivity" />
         </activity>
 
+        <activity android:name=".ui.ReviewActivity"
+            android:parentActivityName=".ui.DetailsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.DetailsActivity" />
+        </activity>
+
         <provider
             android:authorities="com.viatorfortis.popularmovies"
             android:name="com.viatorfortis.popularmovies.db.MovieContentProvider"

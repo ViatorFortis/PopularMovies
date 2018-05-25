@@ -39,4 +39,6 @@
 
     <string name="menu_item_undefined_action_toast">Undefined action for menu item</string>
 
+    <string name="movie_review_list_not_loaded_toast">Movie review list hasn\'t been loaded</string>
+
 </resources>
