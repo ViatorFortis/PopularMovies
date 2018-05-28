@@ -30,6 +30,8 @@ public class NetworkUtils {
 
     private final static String PAGE_PARAMETER = "page";
 
+    private final static String VIDEOS_SEGMENT = "videos";
+
     private final static String API_KEY_PARAMETER = "api_key";
 
     public static String getMovieListPageJSON(Context context, String sortingEndpoint, int nextLoadedPageNumber)
@@ -103,6 +105,29 @@ public class NetworkUtils {
     public static String getMovieReviewListPageJSON(Context context, int movieId, int pageNumber)
             throws IOException {
         URL url = buildMovieReviewListURL(context, movieId, pageNumber);
+        return getResponseFromHttpUrl(url);
+    }
+
+    private static URL buildMovieVideoListURL (Context context, int movieId) {
+        Uri uri = Uri.parse(MOVIES_LIST_BASE_URL).buildUpon()
+                .appendEncodedPath(String.valueOf(movieId) )
+                .appendEncodedPath(VIDEOS_SEGMENT)
+                .appendQueryParameter(API_KEY_PARAMETER, context.getString(R.string.api_key) )
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(uri.toString() );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    public static String getMovieVideoListJSON(Context context, int movieId)
+            throws IOException {
+        URL url = buildMovieVideoListURL(context, movieId);
         return getResponseFromHttpUrl(url);
     }
 }
