@@ -41,4 +41,6 @@
 
     <string name="movie_review_list_not_loaded_toast">Movie review list hasn\'t been loaded</string>
 
+    <string name="movie_video_thumbnail">Movie video thumbnail</string>
+
 </resources>
