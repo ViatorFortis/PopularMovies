@@ -34,6 +34,10 @@ public class NetworkUtils {
 
     private final static String API_KEY_PARAMETER = "api_key";
 
+    private final static String YOUTUBE_VIDEO_THUMBNAIL_BASE_URL = "https://img.youtube.com/vi";
+
+    private final static String FIRST_JPEG_SEGMENT = "0.jpg";
+
     public static String getMovieListPageJSON(Context context, String sortingEndpoint, int nextLoadedPageNumber)
             throws IOException {
         URL url = buildMoviesListURL(context, sortingEndpoint, nextLoadedPageNumber);
@@ -129,5 +133,12 @@ public class NetworkUtils {
             throws IOException {
         URL url = buildMovieVideoListURL(context, movieId);
         return getResponseFromHttpUrl(url);
+    }
+
+    public static Uri buildYoutubeVideoThumbnailURL(int movieId) {
+        return Uri.parse(YOUTUBE_VIDEO_THUMBNAIL_BASE_URL).buildUpon()
+                .appendEncodedPath(String.valueOf(movieId) )
+                .appendEncodedPath(FIRST_JPEG_SEGMENT)
+                .build();
     }
 }
