@@ -183,9 +183,17 @@
                 android:id="@+id/rv_movie_reviews"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:scrollbars="vertical"
+                android:scrollbars="horizontal"
 
-                app:layout_constraintTop_toBottomOf="@+id/tv_details_plot_synopsis"
+                app:layout_constraintTop_toBottomOf="@+id/tv_details_plot_synopsis" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movieVideos"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scrollbars="horizontal"
+
+                app:layout_constraintTop_toBottomOf="@id/rv_movie_reviews"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
 
