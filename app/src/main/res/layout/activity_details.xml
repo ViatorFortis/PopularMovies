@@ -190,7 +190,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_movieVideos"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="280dp"
                 android:scrollbars="horizontal"
 
                 app:layout_constraintTop_toBottomOf="@id/rv_movie_reviews"
