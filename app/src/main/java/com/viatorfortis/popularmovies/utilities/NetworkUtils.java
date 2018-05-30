@@ -135,9 +135,9 @@ public class NetworkUtils {
         return getResponseFromHttpUrl(url);
     }
 
-    public static Uri buildYoutubeVideoThumbnailURL(int movieId) {
+    public static Uri buildYoutubeVideoThumbnailURL(String movieVideoKey) {
         return Uri.parse(YOUTUBE_VIDEO_THUMBNAIL_BASE_URL).buildUpon()
-                .appendEncodedPath(String.valueOf(movieId) )
+                .appendEncodedPath(String.valueOf(movieVideoKey) )
                 .appendEncodedPath(FIRST_JPEG_SEGMENT)
                 .build();
     }

@@ -69,7 +69,7 @@ public class MovieVideoAdapter
         Context thumbnailContext = holder.mVideoThumbnail.getContext();
 
         Picasso.with(thumbnailContext)
-                .load(NetworkUtils.buildYoutubeVideoThumbnailURL(mMovieId) )
+                .load(NetworkUtils.buildYoutubeVideoThumbnailURL(mMovieVideoList.get(position).getKey() ) )
                 .into(holder.mVideoThumbnail);
 
         holder.mVideoName.setText(mMovieVideoList.get(position).getName() );
