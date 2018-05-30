@@ -77,4 +77,9 @@ public class MovieVideoAdapter
 
     @Override
     public int getItemCount() { return mMovieVideoList.size(); }
+
+    public void addItems(ArrayList<MovieVideo> movieVideoList) {
+        mMovieVideoList.addAll(movieVideoList);
+        notifyDataSetChanged();
+    }
 }
