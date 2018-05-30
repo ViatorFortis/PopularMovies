@@ -31,7 +31,10 @@ import com.squareup.picasso.Picasso;
 import com.viatorfortis.popularmovies.R;
 import com.viatorfortis.popularmovies.models.Movie;
 import com.viatorfortis.popularmovies.models.MovieReview;
+import com.viatorfortis.popularmovies.models.MovieVideo;
+import com.viatorfortis.popularmovies.models.MovieVideoList;
 import com.viatorfortis.popularmovies.rv.MovieReviewAdapter;
+import com.viatorfortis.popularmovies.rv.MovieVideoAdapter;
 import com.viatorfortis.popularmovies.utilities.JsonUtils;
 import com.viatorfortis.popularmovies.utilities.NetworkUtils;
 
@@ -42,7 +45,8 @@ import java.util.List;
 public class DetailsActivity
         extends AppCompatActivity
 //        implements LoaderManager.LoaderCallbacks
-        implements MovieReviewAdapter.ItemClickListener
+        implements MovieReviewAdapter.ItemClickListener,
+        MovieVideoAdapter.ItemClickListener
         {
 
     private Movie mMovie;
@@ -58,6 +62,17 @@ public class DetailsActivity
     private MovieReviewAdapter mReviewAdapter;
 
     private RecyclerView mReviewRecyclerView;
+
+
+    private int VIDEO_LIST_LOADER_ID = 15;
+
+    private LoaderManager.LoaderCallbacks<List<MovieVideo>> mVideoLoaderListener;
+
+    private RecyclerView.LayoutManager mVideoLayoutManager;
+    private MovieVideoAdapter mVideoAdapter;
+
+    private RecyclerView mVideoRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +190,70 @@ public class DetailsActivity
                 }
             }
         });
+
+
+        mVideoLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieVideo>>() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public Loader<List<MovieVideo>> onCreateLoader(int id, Bundle args) {
+                return new AsyncTaskLoader<List<MovieVideo>>(getApplicationContext() ) {
+                    @Override
+                    public List<MovieVideo> loadInBackground() {
+                        try {
+                            String movieVideoListJSON = NetworkUtils.getMovieVideoListJSON(getContext(), mMovie.getId() );
+
+                            if (!movieVideoListJSON.isEmpty() ) {
+                                return JsonUtils.parseMovieVideoListJson(movieVideoListJSON);
+                            }
+                        } catch (IOException e) {
+                            Log.d(e.getClass().getName(), e.getMessage());
+                        } catch (JsonSyntaxException e) {
+                            Log.d(e.getClass().getName(), e.getMessage());
+                        }
+
+                        return null;
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<List<MovieVideo>> loader, List<MovieVideo> data) {
+                if (data != null
+                        && data instanceof ArrayList) {
+                    mVideoAdapter.addItems((ArrayList<MovieVideo>) data);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.movie_video_list_not_loaded_toast), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<List<MovieVideo>> loader) {
+
+            }
+        };
+
+        ArrayList<MovieVideo> videoList;
+
+        if (savedInstanceState == null
+                || !savedInstanceState.containsKey("videos")) {
+            videoList = new ArrayList<>();
+            loaderManager.restartLoader(VIDEO_LIST_LOADER_ID, new Bundle(), mVideoLoaderListener).forceLoad();
+        } else {
+            videoList = savedInstanceState.getParcelableArrayList("videos");
+
+            // no sense to restart loader since TMDB API doesn't provide video list pagination
+            //loaderManager.restartLoader(VIDEO_LIST_LOADER_ID, new Bundle(), mVideoLoaderListener);
+        }
+
+        mVideoRecyclerView = findViewById(R.id.rv_movieVideos);
+
+        mVideoLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mVideoRecyclerView.setLayoutManager(mVideoLayoutManager);
+
+        mVideoAdapter = new MovieVideoAdapter(videoList, this, mMovie.getId() );
+        mVideoRecyclerView.setAdapter(mVideoAdapter);
+
+
     }
 
     private void populateViews (Movie movie) {
@@ -262,4 +341,8 @@ public class DetailsActivity
         */
     }
 
-}
+            @Override
+            public void onItemClick(MovieVideo video) {
+                ;
+            }
+        }

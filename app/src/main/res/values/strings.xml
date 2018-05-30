@@ -43,4 +43,6 @@
 
     <string name="movie_video_thumbnail">Movie video thumbnail</string>
 
+    <string name="movie_video_list_not_loaded_toast">Movie video list hasn\'t been loaded</string>
+
 </resources>
