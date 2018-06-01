@@ -38,6 +38,10 @@ public class NetworkUtils {
 
     private final static String FIRST_JPEG_SEGMENT = "0.jpg";
 
+    private final static String YOUTUBE_VIDEO_BASE_URL = "https://www.youtube.com/watch";
+
+    private final static String YOUTUBE_VIDEO_PARAMETER = "v";
+
     public static String getMovieListPageJSON(Context context, String sortingEndpoint, int nextLoadedPageNumber)
             throws IOException {
         URL url = buildMoviesListURL(context, sortingEndpoint, nextLoadedPageNumber);
@@ -139,6 +143,12 @@ public class NetworkUtils {
         return Uri.parse(YOUTUBE_VIDEO_THUMBNAIL_BASE_URL).buildUpon()
                 .appendEncodedPath(String.valueOf(movieVideoKey) )
                 .appendEncodedPath(FIRST_JPEG_SEGMENT)
+                .build();
+    }
+
+    public static Uri buildYoutubeVideoURL(String movieVideoKey) {
+        return Uri.parse(YOUTUBE_VIDEO_BASE_URL).buildUpon()
+                .appendQueryParameter(YOUTUBE_VIDEO_PARAMETER, movieVideoKey)
                 .build();
     }
 }

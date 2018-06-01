@@ -3,6 +3,7 @@ package com.viatorfortis.popularmovies.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
@@ -39,6 +40,7 @@ import com.viatorfortis.popularmovies.utilities.JsonUtils;
 import com.viatorfortis.popularmovies.utilities.NetworkUtils;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -309,40 +311,17 @@ public class DetailsActivity
         Intent intent = new Intent(this, ReviewActivity.class);
         intent.putExtra("ReviewParcel", review);
         startActivity(intent);
-
-        /*
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View reviewLayout = inflater.inflate(R.layout.review,
-                null);
-
-        //reviewLayout.setLayoutParams();
-
-        final PopupWindow popupWindow = new PopupWindow(reviewLayout,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-
-        TextView authorTextView = reviewLayout.findViewById(R.id.review_tv_author);
-        authorTextView.setText(review.getAuthor() );
-
-        TextView contentTextView = reviewLayout.findViewById(R.id.review_tv_content);
-        contentTextView.setText(review.getContent() );
-
-        Button closeButton = reviewLayout.findViewById(R.id.review_btn_close);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-        }
-        });
-
-        //popupWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.black));
-        popupWindow.showAtLocation(mReviewRecyclerView, Gravity.CENTER, 0, 0);
-        */
     }
 
-            @Override
-            public void onItemClick(MovieVideo video) {
-                ;
-            }
+    @Override
+    public void onItemClick(MovieVideo video) {
+        Uri movieVideoUri = NetworkUtils.buildYoutubeVideoURL(video.getKey() );
+
+        Intent youtubeUrlOpen = new Intent(Intent.ACTION_VIEW, movieVideoUri);
+        Intent chooser = Intent.createChooser(youtubeUrlOpen, "Open with");
+
+        if (youtubeUrlOpen.resolveActivity(getPackageManager()) != null) {
+            startActivity(chooser);
         }
+    }
+}
