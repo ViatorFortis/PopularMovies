@@ -45,4 +45,8 @@
 
     <string name="movie_video_list_not_loaded_toast">Movie video list hasn\'t been loaded</string>
 
+    <string name="implicit_intent_chooser_title">Open with</string>
+
+    <string name="review_extra_name">ReviewParcel</string>
+
 </resources>

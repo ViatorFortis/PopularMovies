@@ -309,7 +309,7 @@ public class DetailsActivity
     @Override
     public void onItemClick(MovieReview review) {
         Intent intent = new Intent(this, ReviewActivity.class);
-        intent.putExtra("ReviewParcel", review);
+        intent.putExtra(getString(R.string.review_extra_name), review);
         startActivity(intent);
     }
 
@@ -318,7 +318,7 @@ public class DetailsActivity
         Uri movieVideoUri = NetworkUtils.buildYoutubeVideoURL(video.getKey() );
 
         Intent youtubeUrlOpen = new Intent(Intent.ACTION_VIEW, movieVideoUri);
-        Intent chooser = Intent.createChooser(youtubeUrlOpen, "Open with");
+        Intent chooser = Intent.createChooser(youtubeUrlOpen, getString(R.string.implicit_intent_chooser_title) );
 
         if (youtubeUrlOpen.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);

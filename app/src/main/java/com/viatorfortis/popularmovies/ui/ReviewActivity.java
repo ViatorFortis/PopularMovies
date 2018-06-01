@@ -18,7 +18,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         MovieReview review;
         try {
-            review = getIntent().getParcelableExtra("ReviewParcel");
+            review = getIntent().getParcelableExtra(getString(R.string.review_extra_name) );
         } catch (NullPointerException e) {
             Toast.makeText(this, "Unable to get review", Toast.LENGTH_LONG).show();
             Log.d(e.getClass().getName(), e.getMessage());
