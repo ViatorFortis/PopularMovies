@@ -103,7 +103,7 @@ public class DetailsActivity
         mMovie = movie;
         populateViews(movie);
 
-        mReviewAdapter.resetNextLoadedPageNumber();
+        MovieReviewAdapter.resetNextLoadedPageNumber();
 
         mReviewLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieReview>>() {
             @SuppressLint("StaticFieldLeak")
@@ -113,7 +113,7 @@ public class DetailsActivity
                     @Override
                     public List<MovieReview> loadInBackground() {
                         try {
-                            String movieReviewListPageJSON = NetworkUtils.getMovieReviewListPageJSON(getContext(), mMovie.getId(), mReviewAdapter.getNextLoadedPageNumber() );
+                            String movieReviewListPageJSON = NetworkUtils.getMovieReviewListPageJSON(getContext(), mMovie.getId(), MovieReviewAdapter.getNextLoadedPageNumber() );
 
                             if (!movieReviewListPageJSON.isEmpty()) {
                                 return JsonUtils.parseMovieReviewListJson(movieReviewListPageJSON);

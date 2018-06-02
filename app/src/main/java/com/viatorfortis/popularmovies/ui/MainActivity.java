@@ -199,7 +199,7 @@ public class MainActivity
                 }
 
                 try {
-                    String movieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, mAdapter.getNextLoadedPageNumber() );
+                    String movieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, MovieAdapter.getNextLoadedPageNumber() );
 
                     if (!movieListPageJSON.isEmpty()) {
                         return JsonUtils.parseMovieListJson(movieListPageJSON);
