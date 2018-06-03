@@ -1,7 +1,10 @@
 package com.viatorfortis.popularmovies.ui;
 
 import android.annotation.SuppressLint;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 import com.google.gson.JsonSyntaxException;
 import com.squareup.picasso.Picasso;
 import com.viatorfortis.popularmovies.R;
+import com.viatorfortis.popularmovies.db.MovieContract;
 import com.viatorfortis.popularmovies.models.Movie;
 import com.viatorfortis.popularmovies.models.MovieReview;
 import com.viatorfortis.popularmovies.models.MovieVideo;
@@ -89,7 +93,6 @@ public class DetailsActivity
 
         setTitle(getString(R.string.details_activity_caption) );
 
-        mFavouriteMovie = false;
         Movie movie;
 
         try {
@@ -101,6 +104,9 @@ public class DetailsActivity
         }
 
         mMovie = movie;
+
+        //mFavouriteMovie = false;
+
         populateViews(movie);
 
         MovieReviewAdapter.resetNextLoadedPageNumber();
@@ -280,6 +286,25 @@ public class DetailsActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details_menu, menu);
+
+        Uri contentUriForOneFavourite = ContentUris.withAppendedId( MovieContract.FavouriteMoviesEntry.CONTENT_URI, mMovie.getId() );
+        Cursor favouriteMovieCursor = getContentResolver().query(contentUriForOneFavourite,
+                null,
+                null,
+                null,
+                null);
+
+        MenuItem menuItem = menu.findItem(R.id.mi_favourite);
+
+        if (favouriteMovieCursor != null
+                && favouriteMovieCursor.getCount() > 0) {
+            mFavouriteMovie = true;
+            menuItem.setIcon(R.drawable.ic_star_yellow_36dp);
+        } else {
+            mFavouriteMovie = false;
+            menuItem.setIcon(R.drawable.ic_star_border_black_36dp);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -291,8 +316,11 @@ public class DetailsActivity
             case R.id.mi_favourite:
                 mFavouriteMovie = !mFavouriteMovie;
                 if (mFavouriteMovie) {
+                    //int insertResult =
+                    addToFavourite(mMovie);
                     item.setIcon(R.drawable.ic_star_yellow_36dp);
                 } else {
+                    removeFromFavourite(mMovie.getId() );
                     item.setIcon(R.drawable.ic_star_border_black_36dp);
                 }
                 break;
@@ -300,6 +328,36 @@ public class DetailsActivity
                 Toast.makeText(this, getString(R.string.menu_item_undefined_action_toast), Toast.LENGTH_LONG).show();
         }
         return true;
+    }
+
+    private void addToFavourite(Movie movie) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.FavouriteMoviesEntry._ID, movie.getId() );
+        contentValues.put(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_TITLE, movie.getTitle() );
+        contentValues.put(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_RELEASEDATE, movie.getReleaseDate() );
+        contentValues.put(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_POSTERPATH, movie.getPosterPath() );
+        contentValues.put(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_VOTEAVERAGE, movie.getVoteAverage() );
+        contentValues.put(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_PLOTSYNOPSIS, movie.getPlotSynopsis() );
+
+        Uri uri = getContentResolver().insert(MovieContract.FavouriteMoviesEntry.CONTENT_URI, contentValues);
+
+        if (uri != null) {
+            Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "insertion uri == null", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void removeFromFavourite(int movieId) {
+
+        Uri contentUriForOneFavourite = ContentUris.withAppendedId( MovieContract.FavouriteMoviesEntry.CONTENT_URI, mMovie.getId() );
+        int deletionResult = getContentResolver().delete(contentUriForOneFavourite, null, null);
+
+        if (deletionResult == 1) {
+            Toast.makeText(this, contentUriForOneFavourite.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Row hasn't been deleted", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void loadReviewsIntoAdapter() {
