@@ -49,4 +49,6 @@
 
     <string name="review_extra_name">ReviewParcel</string>
 
+    <string name="show_favourite_action">Favourite movies</string>
+
 </resources>

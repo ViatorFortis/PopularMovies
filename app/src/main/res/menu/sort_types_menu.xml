@@ -17,5 +17,10 @@
             android:title="@string/sort_by_rate_action"
             app:showAsAction="never" />
 
+        <item
+            android:id="@+id/action_show_favourite"
+            android:title="@string/show_favourite_action"
+            app:showAsAction="never" />
+
     </group>
 </menu>
