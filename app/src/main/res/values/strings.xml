@@ -17,7 +17,9 @@
 
     <string name="movies_rating_sorting_app_title_suffix">" (top rated)"</string>
 
-    <string name="movies_list_not_loaded_toast">Movies list hasn\'t been loaded</string>
+    <string name="no_tmdb_movie_found">No TMDB movie found</string>
+
+    <string name="tmdb_movies_loading_error_toast">Error: TMDB movies list hasn\'t been loaded</string>
 
     <string name="sort_type_pref_key">sort_type</string>
 
@@ -50,5 +52,11 @@
     <string name="review_extra_name">ReviewParcel</string>
 
     <string name="show_favourite_action">Favourite movies</string>
+
+    <string name="no_favourite_movie_found">There is no movie marked as favourite</string>
+
+    <string name="favourite_movies_loading_error_toast">Error: favourite movie list hasn\'t been loaded</string>
+
+    <string name="undefined_loader">Undefined loader</string>
 
 </resources>

@@ -1,9 +1,13 @@
 package com.viatorfortis.popularmovies.ui;
 
 import android.annotation.SuppressLint;
+//import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.viatorfortis.popularmovies.R;
+import com.viatorfortis.popularmovies.db.MovieContract;
 import com.viatorfortis.popularmovies.models.Movie;
 import com.viatorfortis.popularmovies.rv.MovieAdapter;
 import com.viatorfortis.popularmovies.utilities.JsonUtils;
@@ -26,6 +31,7 @@ import com.viatorfortis.popularmovies.utilities.NetworkUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity
         extends AppCompatActivity
@@ -44,6 +50,8 @@ public class MainActivity
     private static final int GRID_THRESHOLD_ROW_COUNT = 5;
 
     private static final int GRID_SPAN_COUNT = 2;
+
+    private static final int FAVOURITE_MOVIE_LIST_LOADER_ID = 14;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,54 +189,127 @@ public class MainActivity
 
     @SuppressLint("StaticFieldLeak")
     @Override
-    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List<Movie>>(this) {
-            @Override
-            protected void onStartLoading() {
-                super.onStartLoading();
-            }
+    public Loader /*<List<Movie>>*/ onCreateLoader(int id, Bundle args) {
 
-            @Override
-            public List<Movie> loadInBackground() {
-                String sortingEndpoint;
-
-                if (mSortingPreference.equals(getString(R.string.movies_popularity_sorting))) {
-                    sortingEndpoint = NetworkUtils.POPULARITY_SORTING_ENDPOINT;
-                } else {
-                    sortingEndpoint = NetworkUtils.TOP_RATED_SORTING_ENDPOINT;
+        if (id == MOVIE_LIST_LOADER_ID) {
+            return new AsyncTaskLoader<List<Movie>>(this) {
+                @Override
+                protected void onStartLoading() {
+                    super.onStartLoading();
                 }
 
-                try {
-                    String movieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, MovieAdapter.getNextLoadedPageNumber() );
+                @Override
+                public List<Movie> loadInBackground() {
+                    String sortingEndpoint;
 
-                    if (!movieListPageJSON.isEmpty()) {
-                        return JsonUtils.parseMovieListJson(movieListPageJSON);
+                    if (mSortingPreference.equals(getString(R.string.movies_popularity_sorting))) {
+                        sortingEndpoint = NetworkUtils.POPULARITY_SORTING_ENDPOINT;
+                    } else {
+                        sortingEndpoint = NetworkUtils.TOP_RATED_SORTING_ENDPOINT;
                     }
-                } catch (IOException e) {
-                    Log.d(e.getClass().getName(), e.getMessage());
-                } catch (JsonSyntaxException e) {
-                    Log.d(e.getClass().getName(), e.getMessage());
-                }
 
-                return null;
-            }
-        };
+                    try {
+                        String movieListPageJSON = NetworkUtils.getMovieListPageJSON(getContext(), sortingEndpoint, MovieAdapter.getNextLoadedPageNumber());
+
+                        if (!movieListPageJSON.isEmpty()) {
+                            return JsonUtils.parseMovieListJson(movieListPageJSON);
+                        }
+                    } catch (IOException e) {
+                        Log.d(e.getClass().getName(), e.getMessage());
+                    } catch (JsonSyntaxException e) {
+                        Log.d(e.getClass().getName(), e.getMessage());
+                    }
+
+                    return null;
+                }
+            };
+        }
+
+        else if (id == FAVOURITE_MOVIE_LIST_LOADER_ID) {
+            Uri favouriteMovieUri = MovieContract.FavouriteMoviesEntry.CONTENT_URI;
+
+            return new CursorLoader(this,
+                    favouriteMovieUri,
+                    MovieContract.FavouriteMoviesEntry.FULL_PROJECTION,
+                    null,
+                    null,
+                    MovieContract.FavouriteMoviesEntry._ID
+                    );
+        }
+
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader loader, Object object) {
         mIsLoading = false;
 
-        if (object != null && object instanceof ArrayList) {
-            mAdapter.addMoviesList((ArrayList<Movie>) object);
-        } else {
-            Toast.makeText(this, getString(R.string.movies_list_not_loaded_toast), Toast.LENGTH_LONG).show();
+        switch (loader.getId() ) {
+            case MOVIE_LIST_LOADER_ID:
+                if (object != null
+                        /* && object instanceof ArrayList */ ) {
+                    ArrayList<Movie> movieList = (ArrayList<Movie>) object;
+
+                    if (movieList.size() >0) {
+                        mAdapter.addMoviesList(movieList);
+                    } else {
+                        Toast.makeText(this, getString(R.string.no_tmdb_movie_found), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(this, getString(R.string.tmdb_movies_loading_error_toast), Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case FAVOURITE_MOVIE_LIST_LOADER_ID:
+
+                if (object != null) {
+                    Cursor cursor = (Cursor) object;
+
+                    if (cursor.getCount() > 0) {
+                        ArrayList<Movie> movieList = new ArrayList<>();
+
+                        final int idColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry._ID);
+                        final int titleColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_TITLE);
+                        final int releaseDateColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_RELEASEDATE);
+                        final int posterURLColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_POSTERPATH);
+                        final int voteAverageColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
+                        final int plotSynopsisColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_PLOTSYNOPSIS);
+
+                        while (cursor.moveToNext() ) {
+                            int id = cursor.getInt(idColIndex);
+                            String title = cursor.getString(titleColIndex);
+                            String releaseDate = cursor.getString(releaseDateColIndex);
+                            String posterURL = cursor.getString(posterURLColIndex);
+                            float voteAverage = cursor.getFloat(voteAverageColIndex);
+                            String plotSynopsis = cursor.getString(plotSynopsisColIndex);
+
+                            Movie movie = new Movie(id, title, releaseDate, posterURL, voteAverage, plotSynopsis);
+                            movieList.add(movie);
+                        }
+
+                        mAdapter.addMoviesList(movieList);
+                    } else {
+                        Toast.makeText(this, getString(R.string.no_favourite_movie_found), Toast.LENGTH_LONG).show();
+                    }
+
+                    cursor.close();
+                } else {
+                    Toast.makeText(this, getString(R.string.favourite_movies_loading_error_toast), Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            default:
+                Toast.makeText(this, getString(R.string.undefined_loader), Toast.LENGTH_LONG).show();
         }
+//        if (object != null && object instanceof ArrayList) {
+//            mAdapter.addMoviesList((ArrayList<Movie>) object);
+//        } else {
+//            Toast.makeText(this, getString(R.string.movies_list_not_loaded_toast), Toast.LENGTH_LONG).show();
+//        }
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
-    }
+    public void onLoaderReset(Loader loader) {}
 
     @Override
     public void onGridItemClick(int adapterPosition) {

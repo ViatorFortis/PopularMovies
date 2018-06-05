@@ -29,6 +29,15 @@ public final class MovieContract {
         public static final String COLUMN_NAME_VOTEAVERAGE = "voteAverage";
 
         public static final String COLUMN_NAME_PLOTSYNOPSIS = "plotSynopsis";
+
+        public static final String [] FULL_PROJECTION = {
+                _ID,
+                COLUMN_NAME_TITLE,
+                COLUMN_NAME_RELEASEDATE,
+                COLUMN_NAME_POSTERPATH,
+                COLUMN_NAME_VOTEAVERAGE,
+                COLUMN_NAME_PLOTSYNOPSIS
+            };
     }
 
 }
