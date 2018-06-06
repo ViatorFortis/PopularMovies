@@ -49,8 +49,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
 
     public void resetMoviesList() {
-        mClearListBeforeAddition = true;
+        //mClearListBeforeAddition = true;
         mNextPageNumber = 1;
+        clear();
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder
@@ -114,5 +115,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         mMovieList.addAll(moviesList);
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        final int size = mMovieList.size();
+        mMovieList.clear();
+        notifyItemRangeRemoved(0, size);
     }
 }
