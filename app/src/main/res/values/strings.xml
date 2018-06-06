@@ -51,12 +51,15 @@
 
     <string name="review_extra_name">ReviewParcel</string>
 
-    <string name="show_favourite_action">Favourite movies</string>
-
     <string name="no_favourite_movie_found">There is no movie marked as favourite</string>
 
     <string name="favourite_movies_loading_error_toast">Error: favourite movie list hasn\'t been loaded</string>
 
     <string name="undefined_loader">Undefined loader</string>
 
+    <string name="favourite_movies_list">favourite_list</string>
+
+    <string name="show_favourite_action">show favourite</string>
+
+    <string name="favourite_list_app_title_suffix">" (favourite)"</string>
 </resources>

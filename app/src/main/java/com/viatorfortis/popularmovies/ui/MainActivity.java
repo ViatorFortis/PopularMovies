@@ -71,11 +71,27 @@ public class MainActivity
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies") ) {
             movieList = new ArrayList<>();
-            loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this).forceLoad();
+
+            if (mSortingPreference.equals(getString(R.string.movies_popularity_sorting) )
+                    || mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
+                loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this).forceLoad();
+            } else {
+                loaderManager.restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
+            }
+            //loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this).forceLoad();
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
             mIsLoading = false;
-            loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this);
+
+            if (mSortingPreference.equals(getString(R.string.movies_popularity_sorting) )
+                    || mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
+                loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this);
+                loaderManager.destroyLoader(FAVOURITE_MOVIE_LIST_LOADER_ID);
+            } else {
+                loaderManager.restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, new Bundle(), this);
+                loaderManager.destroyLoader(MOVIE_LIST_LOADER_ID);
+            }
+            //loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this);
         }
 
         // RecyclerView initialization
@@ -97,18 +113,22 @@ public class MainActivity
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+                //
+                if(!mSortingPreference.equals(getString(R.string.favourite_movies_list) ) ) {
+                    super.onScrolled(recyclerView, dx, dy);
 
-                int totalItemCount = mLayoutManager.getItemCount();
-                int lastVisibleItemPosition = ((GridLayoutManager) mLayoutManager).findLastVisibleItemPosition();
+                    int totalItemCount = mLayoutManager.getItemCount();
+                    int lastVisibleItemPosition = ((GridLayoutManager) mLayoutManager).findLastVisibleItemPosition();
 
-                if (!mIsLoading) {
-                    if ( (lastVisibleItemPosition + thresholdItemCount) >= totalItemCount
-                         && lastVisibleItemPosition >= 0) {
-                        mIsLoading = true;
-                        loadMoviesIntoAdapter(false);
+                    if (!mIsLoading) {
+                        if ((lastVisibleItemPosition + thresholdItemCount) >= totalItemCount
+                                && lastVisibleItemPosition >= 0) {
+                            mIsLoading = true;
+                            loadMoviesIntoAdapter(false);
+                        }
                     }
                 }
+                //
             }
         });
     }
@@ -137,11 +157,14 @@ public class MainActivity
         if(mSortingPreference.equals(getString(R.string.movies_popularity_sorting) ) ) {
             menu.findItem(R.id.action_sort_by_popular).setChecked(true);
             setTitle(getString(R.string.app_name) + getString(R.string.movies_popularity_sorting_app_title_suffix) );
-        } else{
-            if(mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
-                menu.findItem(R.id.action_sort_by_top_rated).setChecked(true);
-                setTitle(getString(R.string.app_name) + getString(R.string.movies_rating_sorting_app_title_suffix) );
-            }
+        }
+        else if (mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
+            menu.findItem(R.id.action_sort_by_top_rated).setChecked(true);
+            setTitle(getString(R.string.app_name) + getString(R.string.movies_rating_sorting_app_title_suffix) );
+        }
+        else if (mSortingPreference.equals(getString(R.string.favourite_movies_list) ) ) {
+            menu.findItem(R.id.action_show_favourite).setChecked(true);
+            setTitle(getString(R.string.app_name) + getString(R.string.favourite_list_app_title_suffix) );
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -164,6 +187,11 @@ public class MainActivity
                 setTitle(getString(R.string.app_name) + getString(R.string.movies_rating_sorting_app_title_suffix) );
                 break;
 
+            case R.id.action_show_favourite:
+                newSortPref = getString(R.string.favourite_movies_list);
+                setTitle(getString(R.string.app_name) + getString(R.string.favourite_list_app_title_suffix) );
+                break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -184,7 +212,18 @@ public class MainActivity
             mAdapter.resetMoviesList();
         }
 
-        getSupportLoaderManager().getLoader(MOVIE_LIST_LOADER_ID).forceLoad();
+        if (mSortingPreference.equals(getString(R.string.movies_popularity_sorting) )
+                || mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
+            getSupportLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
+            //getSupportLoaderManager().getLoader(MOVIE_LIST_LOADER_ID).forceLoad();
+            getSupportLoaderManager().destroyLoader(FAVOURITE_MOVIE_LIST_LOADER_ID);
+
+        } else {
+            //mAdapter.clear();
+            getSupportLoaderManager().restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
+            //getSupportLoaderManager().getLoader(FAVOURITE_MOVIE_LIST_LOADER_ID).forceLoad();
+            getSupportLoaderManager().destroyLoader(MOVIE_LIST_LOADER_ID);
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -244,13 +283,15 @@ public class MainActivity
     public void onLoadFinished(Loader loader, Object object) {
         mIsLoading = false;
 
+        ArrayList<Movie> movieList;
+
         switch (loader.getId() ) {
             case MOVIE_LIST_LOADER_ID:
                 if (object != null
                         /* && object instanceof ArrayList */ ) {
-                    ArrayList<Movie> movieList = (ArrayList<Movie>) object;
+                    movieList = (ArrayList<Movie>) object;
 
-                    if (movieList.size() >0) {
+                    if (movieList.size() > 0) {
                         mAdapter.addMoviesList(movieList);
                     } else {
                         Toast.makeText(this, getString(R.string.no_tmdb_movie_found), Toast.LENGTH_LONG).show();
@@ -265,9 +306,9 @@ public class MainActivity
                 if (object != null) {
                     Cursor cursor = (Cursor) object;
 
-                    if (cursor.getCount() > 0) {
-                        ArrayList<Movie> movieList = new ArrayList<>();
+                    movieList = new ArrayList<>();
 
+                    if (cursor.getCount() > 0) {
                         final int idColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry._ID);
                         final int titleColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_TITLE);
                         final int releaseDateColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_RELEASEDATE);
@@ -286,11 +327,11 @@ public class MainActivity
                             Movie movie = new Movie(id, title, releaseDate, posterURL, voteAverage, plotSynopsis);
                             movieList.add(movie);
                         }
-
-                        mAdapter.addMoviesList(movieList);
                     } else {
                         Toast.makeText(this, getString(R.string.no_favourite_movie_found), Toast.LENGTH_LONG).show();
                     }
+
+                    mAdapter.addMoviesList(movieList);
 
                     cursor.close();
                 } else {
