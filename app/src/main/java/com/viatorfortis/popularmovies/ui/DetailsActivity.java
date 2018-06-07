@@ -305,6 +305,8 @@ public class DetailsActivity
             menuItem.setIcon(R.drawable.ic_star_border_black_36dp);
         }
 
+        favouriteMovieCursor.close();
+
         return super.onCreateOptionsMenu(menu);
     }
 
