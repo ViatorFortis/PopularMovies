@@ -150,6 +150,13 @@ public class MainActivity
         MoviesSharedPreferences.setPreferredSortType(this, mSortingPreference);
     }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        //mAdapter.notifyDataSetChanged();
+//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sort_types_menu, menu);
@@ -330,10 +337,8 @@ public class MainActivity
                     } else {
                         Toast.makeText(this, getString(R.string.no_favourite_movie_found), Toast.LENGTH_LONG).show();
                     }
-
+                    mAdapter.resetMoviesList();
                     mAdapter.addMoviesList(movieList);
-
-                    cursor.close();
                 } else {
                     Toast.makeText(this, getString(R.string.favourite_movies_loading_error_toast), Toast.LENGTH_LONG).show();
                 }
