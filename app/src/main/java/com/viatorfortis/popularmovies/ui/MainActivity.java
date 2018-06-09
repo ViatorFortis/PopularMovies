@@ -295,7 +295,7 @@ public class MainActivity
         switch (loader.getId() ) {
             case MOVIE_LIST_LOADER_ID:
                 if (object != null
-                        /* && object instanceof ArrayList */ ) {
+                         && object instanceof ArrayList) {
                     movieList = (ArrayList<Movie>) object;
 
                     if (movieList.size() > 0) {
@@ -310,7 +310,8 @@ public class MainActivity
 
             case FAVOURITE_MOVIE_LIST_LOADER_ID:
 
-                if (object != null) {
+                if (object != null
+                        && object instanceof Cursor) {
                     Cursor cursor = (Cursor) object;
 
                     movieList = new ArrayList<>();
