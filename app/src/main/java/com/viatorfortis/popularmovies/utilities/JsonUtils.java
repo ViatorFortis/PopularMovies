@@ -1,8 +1,5 @@
 package com.viatorfortis.popularmovies.utilities;
 
-
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.viatorfortis.popularmovies.models.Movie;
@@ -11,9 +8,7 @@ import com.viatorfortis.popularmovies.models.MovieReview;
 import com.viatorfortis.popularmovies.models.MovieReviewListPage;
 import com.viatorfortis.popularmovies.models.MovieVideo;
 import com.viatorfortis.popularmovies.models.MovieVideoList;
-
 import java.util.List;
-
 
 public class JsonUtils {
     public static List<Movie> parseMovieListJson(String json)
