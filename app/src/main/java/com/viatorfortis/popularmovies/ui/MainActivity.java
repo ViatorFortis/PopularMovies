@@ -1,7 +1,6 @@
 package com.viatorfortis.popularmovies.ui;
 
 import android.annotation.SuppressLint;
-//import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -78,7 +77,6 @@ public class MainActivity
             } else {
                 loaderManager.restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
             }
-            //loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this).forceLoad();
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
             mIsLoading = false;
@@ -91,12 +89,13 @@ public class MainActivity
                 loaderManager.restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, new Bundle(), this);
                 loaderManager.destroyLoader(MOVIE_LIST_LOADER_ID);
             }
-            //loaderManager.restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(),this);
         }
 
-        // RecyclerView initialization
         RecyclerView recyclerView = findViewById(R.id.rv_movies);
+        initMovieListRecyclerView(recyclerView, movieList);
+    }
 
+    private void initMovieListRecyclerView(RecyclerView recyclerView, ArrayList<Movie> movieList) {
         mLayoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
         recyclerView.setLayoutManager(mLayoutManager);
 
@@ -113,7 +112,6 @@ public class MainActivity
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                //
                 if(!mSortingPreference.equals(getString(R.string.favourite_movies_list) ) ) {
                     super.onScrolled(recyclerView, dx, dy);
 
@@ -128,7 +126,6 @@ public class MainActivity
                         }
                     }
                 }
-                //
             }
         });
     }
@@ -149,13 +146,6 @@ public class MainActivity
 
         MoviesSharedPreferences.setPreferredSortType(this, mSortingPreference);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        //mAdapter.notifyDataSetChanged();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -222,20 +212,17 @@ public class MainActivity
         if (mSortingPreference.equals(getString(R.string.movies_popularity_sorting) )
                 || mSortingPreference.equals(getString(R.string.movies_rating_sorting) ) ) {
             getSupportLoaderManager().restartLoader(MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
-            //getSupportLoaderManager().getLoader(MOVIE_LIST_LOADER_ID).forceLoad();
             getSupportLoaderManager().destroyLoader(FAVOURITE_MOVIE_LIST_LOADER_ID);
 
         } else {
-            //mAdapter.clear();
             getSupportLoaderManager().restartLoader(FAVOURITE_MOVIE_LIST_LOADER_ID, new Bundle(), this).forceLoad();
-            //getSupportLoaderManager().getLoader(FAVOURITE_MOVIE_LIST_LOADER_ID).forceLoad();
             getSupportLoaderManager().destroyLoader(MOVIE_LIST_LOADER_ID);
         }
     }
 
     @SuppressLint("StaticFieldLeak")
     @Override
-    public Loader /*<List<Movie>>*/ onCreateLoader(int id, Bundle args) {
+    public Loader onCreateLoader(int id, Bundle args) {
 
         if (id == MOVIE_LIST_LOADER_ID) {
             return new AsyncTaskLoader<List<Movie>>(this) {
@@ -309,7 +296,6 @@ public class MainActivity
                 break;
 
             case FAVOURITE_MOVIE_LIST_LOADER_ID:
-
                 if (object != null
                         && object instanceof Cursor) {
                     Cursor cursor = (Cursor) object;
@@ -317,24 +303,7 @@ public class MainActivity
                     movieList = new ArrayList<>();
 
                     if (cursor.getCount() > 0) {
-                        final int idColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry._ID);
-                        final int titleColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_TITLE);
-                        final int releaseDateColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_RELEASEDATE);
-                        final int posterURLColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_POSTERPATH);
-                        final int voteAverageColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
-                        final int plotSynopsisColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_PLOTSYNOPSIS);
-
-                        while (cursor.moveToNext() ) {
-                            int id = cursor.getInt(idColIndex);
-                            String title = cursor.getString(titleColIndex);
-                            String releaseDate = cursor.getString(releaseDateColIndex);
-                            String posterURL = cursor.getString(posterURLColIndex);
-                            float voteAverage = cursor.getFloat(voteAverageColIndex);
-                            String plotSynopsis = cursor.getString(plotSynopsisColIndex);
-
-                            Movie movie = new Movie(id, title, releaseDate, posterURL, voteAverage, plotSynopsis);
-                            movieList.add(movie);
-                        }
+                        extractFavouriteMovieList(movieList, cursor);
                     } else {
                         Toast.makeText(this, getString(R.string.no_favourite_movie_found), Toast.LENGTH_LONG).show();
                     }
@@ -348,11 +317,27 @@ public class MainActivity
             default:
                 Toast.makeText(this, getString(R.string.undefined_loader), Toast.LENGTH_LONG).show();
         }
-//        if (object != null && object instanceof ArrayList) {
-//            mAdapter.addMoviesList((ArrayList<Movie>) object);
-//        } else {
-//            Toast.makeText(this, getString(R.string.movies_list_not_loaded_toast), Toast.LENGTH_LONG).show();
-//        }
+    }
+
+    private void extractFavouriteMovieList(ArrayList<Movie> movieList, Cursor cursor) {
+        final int idColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry._ID);
+        final int titleColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_TITLE);
+        final int releaseDateColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_RELEASEDATE);
+        final int posterURLColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_POSTERPATH);
+        final int voteAverageColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
+        final int plotSynopsisColIndex = cursor.getColumnIndex(MovieContract.FavouriteMoviesEntry.COLUMN_NAME_PLOTSYNOPSIS);
+
+        while (cursor.moveToNext() ) {
+            int id = cursor.getInt(idColIndex);
+            String title = cursor.getString(titleColIndex);
+            String releaseDate = cursor.getString(releaseDateColIndex);
+            String posterURL = cursor.getString(posterURLColIndex);
+            float voteAverage = cursor.getFloat(voteAverageColIndex);
+            String plotSynopsis = cursor.getString(plotSynopsisColIndex);
+
+            Movie movie = new Movie(id, title, releaseDate, posterURL, voteAverage, plotSynopsis);
+            movieList.add(movie);
+        }
     }
 
     @Override
