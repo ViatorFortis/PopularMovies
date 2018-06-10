@@ -1,4 +1,5 @@
 package com.viatorfortis.popularmovies.rv;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,19 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
 import com.viatorfortis.popularmovies.R;
 import com.viatorfortis.popularmovies.models.Movie;
 import com.viatorfortis.popularmovies.utilities.NetworkUtils;
-
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
-
-
 
     private final ArrayList<Movie> mMovieList;
     private static int mNextPageNumber = 1;
@@ -47,9 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mNextPageNumber;
     }
 
-
     public void resetMoviesList() {
-        //mClearListBeforeAddition = true;
         mNextPageNumber = 1;
         clear();
     }
@@ -74,7 +67,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
     }
 
-
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext() );
@@ -84,11 +76,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         return new MovieViewHolder(view);
     }
-
-//    @Override
-//    public void onViewAttachedToWindow(MovieViewHolder holder) {
-//        super.onViewAttachedToWindow(holder);
-//    }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, final int position) {
@@ -107,7 +94,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public void addMoviesList(ArrayList<Movie> moviesList) {
         if (mClearListBeforeAddition) {
-            mMovieList.clear();
+            resetMoviesList();
             mClearListBeforeAddition = false;
         }
 
@@ -117,7 +104,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
-    public void clear() {
+    private void clear() {
         final int size = mMovieList.size();
         mMovieList.clear();
         notifyItemRangeRemoved(0, size);
