@@ -50,25 +50,17 @@ public class DetailsActivity
 
     private final int REVIEW_LIST_LOADER_ID = 14;
 
-    private LoaderManager.LoaderCallbacks<List<MovieReview>> mReviewLoaderListener;
-
     private RecyclerView.LayoutManager mReviewLayoutManager;
     private MovieReviewAdapter mReviewAdapter;
-
-    private RecyclerView mReviewRecyclerView;
 
 
     private final int VIDEO_LIST_LOADER_ID = 15;
 
-    private LoaderManager.LoaderCallbacks<List<MovieVideo>> mVideoLoaderListener;
-
     private RecyclerView.LayoutManager mVideoLayoutManager;
     private MovieVideoAdapter mVideoAdapter;
 
-    private RecyclerView mVideoRecyclerView;
 
-
-    @Override
+            @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
@@ -97,15 +89,15 @@ public class DetailsActivity
 
         MovieReviewAdapter.resetNextLoadedPageNumber();
 
-        mReviewLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieReview>>() {
+        LoaderManager.LoaderCallbacks<List<MovieReview>> reviewLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieReview>>() {
             @SuppressLint("StaticFieldLeak")
             @Override
             public Loader<List<MovieReview>> onCreateLoader(int id, Bundle args) {
-                return new AsyncTaskLoader<List<MovieReview>>(getApplicationContext() ) {
+                return new AsyncTaskLoader<List<MovieReview>>(getApplicationContext()) {
                     @Override
                     public List<MovieReview> loadInBackground() {
                         try {
-                            String movieReviewListPageJSON = NetworkUtils.getMovieReviewListPageJSON(getContext(), mMovie.getId(), MovieReviewAdapter.getNextLoadedPageNumber() );
+                            String movieReviewListPageJSON = NetworkUtils.getMovieReviewListPageJSON(getContext(), mMovie.getId(), MovieReviewAdapter.getNextLoadedPageNumber());
 
                             if (!movieReviewListPageJSON.isEmpty()) {
                                 return JsonUtils.parseMovieReviewListJson(movieReviewListPageJSON);
@@ -134,10 +126,11 @@ public class DetailsActivity
             }
 
             @Override
-            public void onLoaderReset(android.support.v4.content.Loader<List<MovieReview>> loader) {
+            public void onLoaderReset(Loader<List<MovieReview>> loader) {
 
             }
         };
+
 
         ArrayList<MovieReview> reviewList;
         LoaderManager loaderManager = getSupportLoaderManager();
@@ -145,58 +138,28 @@ public class DetailsActivity
         if (savedInstanceState == null
                 || !savedInstanceState.containsKey("reviews")) {
             reviewList = new ArrayList<>();
-            loaderManager.restartLoader(REVIEW_LIST_LOADER_ID, new Bundle(), mReviewLoaderListener).forceLoad();
+            loaderManager.restartLoader(REVIEW_LIST_LOADER_ID, new Bundle(), reviewLoaderListener).forceLoad();
         } else {
             reviewList = savedInstanceState.getParcelableArrayList("reviews");
             mReviewLoading = false;
-            loaderManager.restartLoader(REVIEW_LIST_LOADER_ID, new Bundle(), mReviewLoaderListener);
+            loaderManager.restartLoader(REVIEW_LIST_LOADER_ID, new Bundle(), reviewLoaderListener);
         }
 
-
-        mReviewRecyclerView = findViewById(R.id.rv_movie_reviews);
-
-        mReviewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mReviewRecyclerView.setLayoutManager(mReviewLayoutManager);
-
-        mReviewAdapter = new MovieReviewAdapter(reviewList, this);
-        mReviewRecyclerView.setAdapter(mReviewAdapter);
-
-        mReviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            private final int THRESHOLD_ITEM_COUNT = 3;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                int totalItemCount = mReviewLayoutManager.getItemCount();
-                int lastVisibleItemPosition = ( (LinearLayoutManager) mReviewLayoutManager).findLastVisibleItemPosition();
-
-                if (!mReviewLoading) {
-                    if ((lastVisibleItemPosition + THRESHOLD_ITEM_COUNT) >= totalItemCount) {
-                        mReviewLoading = true;
-                        loadReviewsIntoAdapter();
-                    }
-                }
-            }
-        });
+        RecyclerView ReviewRecyclerView = findViewById(R.id.rv_movie_reviews);
+        initReviewListRecyclerView(ReviewRecyclerView, reviewList);
 
 
-        mVideoLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieVideo>>() {
+        LoaderManager.LoaderCallbacks<List<MovieVideo>> videoLoaderListener = new LoaderManager.LoaderCallbacks<List<MovieVideo>>() {
             @SuppressLint("StaticFieldLeak")
             @Override
             public Loader<List<MovieVideo>> onCreateLoader(int id, Bundle args) {
-                return new AsyncTaskLoader<List<MovieVideo>>(getApplicationContext() ) {
+                return new AsyncTaskLoader<List<MovieVideo>>(getApplicationContext()) {
                     @Override
                     public List<MovieVideo> loadInBackground() {
                         try {
-                            String movieVideoListJSON = NetworkUtils.getMovieVideoListJSON(getContext(), mMovie.getId() );
+                            String movieVideoListJSON = NetworkUtils.getMovieVideoListJSON(getContext(), mMovie.getId());
 
-                            if (!movieVideoListJSON.isEmpty() ) {
+                            if (!movieVideoListJSON.isEmpty()) {
                                 return JsonUtils.parseMovieVideoListJson(movieVideoListJSON);
                             }
                         } catch (IOException e) {
@@ -231,7 +194,7 @@ public class DetailsActivity
         if (savedInstanceState == null
                 || !savedInstanceState.containsKey("videos")) {
             videoList = new ArrayList<>();
-            loaderManager.restartLoader(VIDEO_LIST_LOADER_ID, new Bundle(), mVideoLoaderListener).forceLoad();
+            loaderManager.restartLoader(VIDEO_LIST_LOADER_ID, new Bundle(), videoLoaderListener).forceLoad();
         } else {
             videoList = savedInstanceState.getParcelableArrayList("videos");
 
@@ -239,15 +202,49 @@ public class DetailsActivity
             //loaderManager.restartLoader(VIDEO_LIST_LOADER_ID, new Bundle(), mVideoLoaderListener);
         }
 
-        mVideoRecyclerView = findViewById(R.id.rv_movieVideos);
+        RecyclerView videoRecyclerView = findViewById(R.id.rv_movieVideos);
+        initVideoListRecyclerView(videoRecyclerView, videoList);
+    }
 
+    private void initReviewListRecyclerView(RecyclerView recyclerView, ArrayList<MovieReview> reviewList)
+    {
+        mReviewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(mReviewLayoutManager);
+
+        mReviewAdapter = new MovieReviewAdapter(reviewList, this);
+        recyclerView.setAdapter(mReviewAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private final int THRESHOLD_ITEM_COUNT = 3;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = mReviewLayoutManager.getItemCount();
+                int lastVisibleItemPosition = ( (LinearLayoutManager) mReviewLayoutManager).findLastVisibleItemPosition();
+
+                if (!mReviewLoading) {
+                    if ((lastVisibleItemPosition + THRESHOLD_ITEM_COUNT) >= totalItemCount) {
+                        mReviewLoading = true;
+                        loadReviewsIntoAdapter();
+                    }
+                }
+            }
+        });
+    }
+
+    private void initVideoListRecyclerView(RecyclerView recyclerView, ArrayList<MovieVideo> videoList) {
         mVideoLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mVideoRecyclerView.setLayoutManager(mVideoLayoutManager);
+        recyclerView.setLayoutManager(mVideoLayoutManager);
 
         mVideoAdapter = new MovieVideoAdapter(videoList, this);
-        mVideoRecyclerView.setAdapter(mVideoAdapter);
-
-
+        recyclerView.setAdapter(mVideoAdapter);
     }
 
     private void populateViews (Movie movie) {
