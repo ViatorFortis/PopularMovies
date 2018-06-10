@@ -5,7 +5,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -17,19 +16,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.JsonSyntaxException;
 import com.squareup.picasso.Picasso;
 import com.viatorfortis.popularmovies.R;
@@ -37,20 +29,16 @@ import com.viatorfortis.popularmovies.db.MovieContract;
 import com.viatorfortis.popularmovies.models.Movie;
 import com.viatorfortis.popularmovies.models.MovieReview;
 import com.viatorfortis.popularmovies.models.MovieVideo;
-import com.viatorfortis.popularmovies.models.MovieVideoList;
 import com.viatorfortis.popularmovies.rv.MovieReviewAdapter;
 import com.viatorfortis.popularmovies.rv.MovieVideoAdapter;
 import com.viatorfortis.popularmovies.utilities.JsonUtils;
 import com.viatorfortis.popularmovies.utilities.NetworkUtils;
-
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsActivity
         extends AppCompatActivity
-//        implements LoaderManager.LoaderCallbacks
         implements MovieReviewAdapter.ItemClickListener,
         MovieVideoAdapter.ItemClickListener
         {
@@ -104,8 +92,6 @@ public class DetailsActivity
         }
 
         mMovie = movie;
-
-        //mFavouriteMovie = false;
 
         populateViews(movie);
 
@@ -318,7 +304,6 @@ public class DetailsActivity
             case R.id.mi_favourite:
                 mFavouriteMovie = !mFavouriteMovie;
                 if (mFavouriteMovie) {
-                    //int insertResult =
                     addToFavourite(mMovie);
                     item.setIcon(R.drawable.ic_star_yellow_36dp);
                 } else {
