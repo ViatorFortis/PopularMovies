@@ -344,9 +344,9 @@ public class DetailsActivity
         Uri uri = getContentResolver().insert(MovieContract.FavouriteMoviesEntry.CONTENT_URI, contentValues);
 
         if (uri != null) {
-            Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.add_to_favourite_toast), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "insertion uri == null", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.failed_to_add_to_favourite_toast), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -356,9 +356,9 @@ public class DetailsActivity
         int deletionResult = getContentResolver().delete(contentUriForOneFavourite, null, null);
 
         if (deletionResult == 1) {
-            Toast.makeText(this, contentUriForOneFavourite.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.remove_from_favourite_toast), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Row hasn't been deleted", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.failed_to_remove_to_favourite_toast), Toast.LENGTH_LONG).show();
         }
     }
 

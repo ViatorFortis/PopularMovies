@@ -66,4 +66,12 @@
     <string name="movie_reviews_label">"Reviews: "</string>
 
     <string name="movie_videos_label">"Videos: "</string>
+
+    <string name="add_to_favourite_toast">"Movie has been added to favourite"</string>
+
+    <string name="failed_to_add_to_favourite_toast">Failed to add movie to favourite</string>
+
+    <string name="remove_from_favourite_toast">"Movie has been removed from favourite"</string>
+
+    <string name="failed_to_remove_to_favourite_toast">Failed to remove movie to favourite</string>
 </resources>
