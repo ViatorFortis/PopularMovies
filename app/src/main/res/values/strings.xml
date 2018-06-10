@@ -62,4 +62,8 @@
     <string name="show_favourite_action">show favourite</string>
 
     <string name="favourite_list_app_title_suffix">" (favourite)"</string>
+
+    <string name="movie_reviews_label">"Reviews: "</string>
+
+    <string name="movie_videos_label">"Videos: "</string>
 </resources>
