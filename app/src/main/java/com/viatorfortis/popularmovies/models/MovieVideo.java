@@ -32,7 +32,7 @@ public class MovieVideo implements Parcelable {
         mSize = size;
     }
 
-    public MovieVideo(Parcel in) {
+    private MovieVideo(Parcel in) {
         mId = in.readString();
         mKey = in.readString();
         mName = in.readString();

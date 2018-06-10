@@ -19,7 +19,6 @@ public class MovieVideoAdapter
         extends RecyclerView.Adapter<MovieVideoAdapter.MovieVideoViewHolder> {
 
     private final ArrayList<MovieVideo> mMovieVideoList;
-    private final int mMovieId;
 
     public interface ItemClickListener {
         void onItemClick(MovieVideo video);
@@ -27,10 +26,9 @@ public class MovieVideoAdapter
 
     private final ItemClickListener mItemClickListener;
 
-    public MovieVideoAdapter(ArrayList<MovieVideo> movieVideoList, ItemClickListener itemClickListener, int movieId) {
+    public MovieVideoAdapter(ArrayList<MovieVideo> movieVideoList, ItemClickListener itemClickListener) {
         mMovieVideoList = movieVideoList;
         mItemClickListener = itemClickListener;
-        mMovieId = movieId;
     }
 
     public class MovieVideoViewHolder

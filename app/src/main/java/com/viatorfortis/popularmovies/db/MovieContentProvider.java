@@ -15,13 +15,13 @@ import static com.viatorfortis.popularmovies.db.MovieContract.FavouriteMoviesEnt
 
 public class MovieContentProvider extends ContentProvider {
 
-    public static final int FAVOURITE_MOVIES = 100;
+    private static final int FAVOURITE_MOVIES = 100;
 
-    public static final int FAVOURITE_MOVIE_WITH_ID = 101;
+    private static final int FAVOURITE_MOVIE_WITH_ID = 101;
 
-    public static final UriMatcher sUriMatcher = buildUriMatcher();
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         // match for the whole favouriteMovies directory

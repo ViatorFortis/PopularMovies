@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.viatorfortis.popularmovies.db.MovieContract.*;
 
-public class MovieDbHelper extends SQLiteOpenHelper {
+class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movies.db";
 

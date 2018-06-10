@@ -48,7 +48,7 @@ public class DetailsActivity
 
     private boolean mReviewLoading = true;
 
-    private int REVIEW_LIST_LOADER_ID = 14;
+    private final int REVIEW_LIST_LOADER_ID = 14;
 
     private LoaderManager.LoaderCallbacks<List<MovieReview>> mReviewLoaderListener;
 
@@ -58,7 +58,7 @@ public class DetailsActivity
     private RecyclerView mReviewRecyclerView;
 
 
-    private int VIDEO_LIST_LOADER_ID = 15;
+    private final int VIDEO_LIST_LOADER_ID = 15;
 
     private LoaderManager.LoaderCallbacks<List<MovieVideo>> mVideoLoaderListener;
 
@@ -244,7 +244,7 @@ public class DetailsActivity
         mVideoLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mVideoRecyclerView.setLayoutManager(mVideoLayoutManager);
 
-        mVideoAdapter = new MovieVideoAdapter(videoList, this, mMovie.getId() );
+        mVideoAdapter = new MovieVideoAdapter(videoList, this);
         mVideoRecyclerView.setAdapter(mVideoAdapter);
 
 
@@ -307,7 +307,7 @@ public class DetailsActivity
                     addToFavourite(mMovie);
                     item.setIcon(R.drawable.ic_star_yellow_36dp);
                 } else {
-                    removeFromFavourite(mMovie.getId() );
+                    removeFromFavourite();
                     item.setIcon(R.drawable.ic_star_border_black_36dp);
                 }
                 break;
@@ -335,7 +335,7 @@ public class DetailsActivity
         }
     }
 
-    private void removeFromFavourite(int movieId) {
+    private void removeFromFavourite() {
 
         Uri contentUriForOneFavourite = ContentUris.withAppendedId( MovieContract.FavouriteMoviesEntry.CONTENT_URI, mMovie.getId() );
         int deletionResult = getContentResolver().delete(contentUriForOneFavourite, null, null);

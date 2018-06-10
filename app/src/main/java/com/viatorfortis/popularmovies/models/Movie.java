@@ -11,7 +11,7 @@ public class Movie
 
     // for Popular movies part 2 project
     @SerializedName("id")
-    private int mId;
+    private final int mId;
 
     @SerializedName("title")
     private final String mTitle;

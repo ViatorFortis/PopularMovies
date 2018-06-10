@@ -9,7 +9,7 @@ public final class MovieContract {
 
     public static final String AUTHORITY = "com.viatorfortis.popularmovies";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final String PATH_FAVOURITE_MOVIES = "favouriteMovies";
 
